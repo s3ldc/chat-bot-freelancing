@@ -196,7 +196,6 @@ const handleLink = (label, links) => {
 
   setMenuState("hidden");
   setSubMenuActive(true);
-  console.log("Links received:", links);
 
 };
 
