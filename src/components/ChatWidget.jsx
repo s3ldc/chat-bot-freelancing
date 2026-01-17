@@ -3,12 +3,11 @@ import ChatHeader from "./ChatHeader";
 import { ZOOM_LINK } from "../config/constants";
 import { RESOURCES } from "../config/constants";
 
-
 export default function ChatWidget({ lead }) {
   const [messages, setMessages] = useState([]);
   const [showZoomButton, setShowZoomButton] = useState(false);
   const [zoomClicked, setZoomClicked] = useState(
-    localStorage.getItem("zoomClicked") === "true"
+    localStorage.getItem("zoomClicked") === "true",
   );
   const [menuState, setMenuState] = useState("hidden");
   // possible values: "hidden" | "main"
@@ -18,6 +17,7 @@ export default function ChatWidget({ lead }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const [rescueActive, setRescueActive] = useState(false);
   const [userInput, setUserInput] = useState("");
+  const [submenuSource, setSubmenuSource] = useState(null);
 
   // Initial Zoom pitch flow
   useEffect(() => {
@@ -113,7 +113,11 @@ export default function ChatWidget({ lead }) {
           "Here’s the complete breakdown of how to apply:",
         type: "submenu",
       },
-      { sender: "bot", text: RESOURCES.APS, type: "submenu" },
+      {
+        sender: "bot",
+        text: "APS guidance is explained in detail during the live Zoom session.",
+        type: "submenu",
+      },
       {
         sender: "bot",
         text: "Anything else you'd like to explore?",
@@ -128,6 +132,7 @@ export default function ChatWidget({ lead }) {
   const handleStories = () => {
     clearRescueTimer();
     setActiveMenu("Success Stories");
+    setSubmenuSource("stories"); // 👈 important
 
     setMessages((prev) => [
       ...prev,
@@ -135,20 +140,21 @@ export default function ChatWidget({ lead }) {
         sender: "bot",
         text:
           "We’ve helped hundreds of students reach Germany 🇩🇪\n" +
-          "Check out our latest visas and student testimonials here:",
+          "Through our live Zoom counselling, we explain real admission journeys, visa approvals, and student success stories.",
         type: "submenu",
       },
-      { sender: "bot", text: RESOURCES.STORIES, type: "submenu" },
       {
         sender: "bot",
-        text: "Ready to be our next success story? The Zoom session is still open if you want to join!",
+        text: "If you want personalised guidance and real examples, you can join our live Zoom counselling.",
         type: "submenu",
       },
     ]);
 
-    setShowZoomButton(true);
     setMenuState("hidden");
     setSubMenuActive(true);
+
+    // ❌ REMOVE THIS
+    // setShowZoomButton(true);
   };
 
   const handleLink = (label, link) => {
@@ -215,13 +221,15 @@ export default function ChatWidget({ lead }) {
 
     // ---- GERMAN / A1 / A2 ----
     if (text.includes("a1") || text.includes("a2") || text.includes("german")) {
-      handleLink("A1 / A2 German Guide", RESOURCES.A1A2);
+      handleLink("A1 / A2 German Guide", RESOURCES.GERMAN_A1);
+
       return;
     }
 
     // ---- MASTERS ----
     if (text.includes("master")) {
-      handleLink("Bachelors / Masters Guide", RESOURCES.DEGREE);
+      handleLink("Masters in Germany", RESOURCES.MASTERS);
+
       return;
     }
 
@@ -293,7 +301,7 @@ export default function ChatWidget({ lead }) {
           );
         })}
 
-        {showZoomButton && !zoomClicked && !subMenuActive && (
+        {showZoomButton && !zoomClicked && (
           <button className="zoom-button" onClick={handleZoomClick}>
             Join Live Zoom Session
           </button>
@@ -353,7 +361,24 @@ export default function ChatWidget({ lead }) {
                   ? "menu-item active"
                   : "menu-item"
               }
-              onClick={() => handleLink("Education Loan Info", RESOURCES.LOAN)}
+              onClick={() => {
+                clearRescueTimer();
+                setActiveMenu("Education Loan Info");
+
+                setMessages((prev) => [
+                  ...prev,
+                  {
+                    sender: "bot",
+                    text:
+                      "Education loan options for Germany depend on your profile, university, and intake.\n" +
+                      "We explain loan providers, blocked account requirements, and eligibility clearly during the live Zoom counselling session.",
+                    type: "submenu",
+                  },
+                ]);
+
+                setMenuState("hidden");
+                setSubMenuActive(true);
+              }}
             >
               Education Loan Info
             </button>
@@ -375,13 +400,20 @@ export default function ChatWidget({ lead }) {
             className="submenu-close"
             onClick={() => {
               setMessages((prev) =>
-                prev.filter((msg) => msg.type !== "submenu")
+                prev.filter((msg) => msg.type !== "submenu"),
               );
 
               setSubMenuActive(false);
               setMenuState("main");
               setActiveMenu(null);
               setRescueActive(true);
+
+              // ✅ Show Zoom button ONLY if coming from Success Stories
+              if (submenuSource === "stories" && !zoomClicked) {
+                setShowZoomButton(true);
+              }
+
+              setSubmenuSource(null);
             }}
           >
             Back to Menu
