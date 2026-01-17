@@ -1,8 +1,8 @@
 export const ZOOM_LINK =
   "https://us02web.zoom.us/j/5295617868?pwd=MStIWTg1L3MrSnhMd3N5VStxdWZvdz09";
 
-export const WHATSAPP_NUMBER = "919712425555";
-export const CALL_NUMBER = "919712425555";
+export const WHATSAPP_NUMBER = "7211125555";
+export const CALL_NUMBER = "9712425555";
 
 export const RESOURCES = {
   MASTERS: "https://indogermaneducation.com/masters/",

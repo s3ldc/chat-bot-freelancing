@@ -5,7 +5,7 @@ import { RESOURCES } from "../config/constants";
 
 export default function ChatWidget({ lead }) {
   const [messages, setMessages] = useState([]);
-  const [showZoomButton, setShowZoomButton] = useState(false);
+  // const [showZoomButton, setShowZoomButton] = useState(false);
   const [zoomClicked, setZoomClicked] = useState(
     localStorage.getItem("zoomClicked") === "true",
   );
@@ -18,6 +18,9 @@ export default function ChatWidget({ lead }) {
   const [rescueActive, setRescueActive] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [submenuSource, setSubmenuSource] = useState(null);
+  const [zoomCTAVisible, setZoomCTAVisible] = useState(false);
+  const [zoomUnlocked, setZoomUnlocked] = useState(false);
+
 
   // Initial Zoom pitch flow
   useEffect(() => {
@@ -37,7 +40,7 @@ export default function ChatWidget({ lead }) {
       i++;
       if (i === flow.length) {
         clearInterval(interval);
-        setShowZoomButton(true);
+        setZoomCTAVisible(true);
         startRescueTimer();
       }
     }, 700);
@@ -59,7 +62,7 @@ export default function ChatWidget({ lead }) {
         },
       ]);
       setMenuState("main");
-      setShowZoomButton(false);
+      setZoomCTAVisible(false);
       setRescueActive(true);
     }, 8000);
   };
@@ -67,7 +70,7 @@ export default function ChatWidget({ lead }) {
   // Zoom click
   const handleZoomClick = () => {
     localStorage.setItem("zoomClicked", "true");
-    setZoomClicked(true);
+    setZoomCTAVisible(false);
     window.open(ZOOM_LINK, "_blank");
 
     clearTimeout(rescueTimerRef.current);
@@ -89,7 +92,7 @@ export default function ChatWidget({ lead }) {
       },
     ]);
 
-    setShowZoomButton(false);
+    setZoomCTAVisible(false);
   };
 
   const clearRescueTimer = () => {
@@ -102,6 +105,8 @@ export default function ChatWidget({ lead }) {
   // Resource handlers
   const handleAPS = () => {
     clearRescueTimer();
+    setZoomCTAVisible(false);
+
     setActiveMenu("APS Process Guide");
 
     setMessages((prev) => [
@@ -131,8 +136,13 @@ export default function ChatWidget({ lead }) {
 
   const handleStories = () => {
     clearRescueTimer();
+
     setActiveMenu("Success Stories");
-    setSubmenuSource("stories"); // 👈 important
+    setSubmenuSource("stories");
+
+    // Hide Zoom while inside submenu
+    setZoomCTAVisible(false);
+    setZoomUnlocked(true);
 
     setMessages((prev) => [
       ...prev,
@@ -140,7 +150,7 @@ export default function ChatWidget({ lead }) {
         sender: "bot",
         text:
           "We’ve helped hundreds of students reach Germany 🇩🇪\n" +
-          "Through our live Zoom counselling, we explain real admission journeys, visa approvals, and student success stories.",
+          "Through live Zoom counselling, we explain real admission journeys, visa approvals, and student success stories.",
         type: "submenu",
       },
       {
@@ -152,13 +162,12 @@ export default function ChatWidget({ lead }) {
 
     setMenuState("hidden");
     setSubMenuActive(true);
-
-    // ❌ REMOVE THIS
-    // setShowZoomButton(true);
   };
 
   const handleLink = (label, link) => {
     clearRescueTimer();
+    setZoomCTAVisible(false);
+
     setActiveMenu(label);
 
     setMessages((prev) => [
@@ -180,7 +189,7 @@ export default function ChatWidget({ lead }) {
   const openRescueMenu = () => {
     setMenuState("main");
     setRescueActive(true);
-    setShowZoomButton(false);
+    setZoomCTAVisible(false);
   };
 
   const handleUserInput = () => {
@@ -301,7 +310,7 @@ export default function ChatWidget({ lead }) {
           );
         })}
 
-        {showZoomButton && !zoomClicked && (
+        {zoomCTAVisible && !zoomClicked && (
           <button className="zoom-button" onClick={handleZoomClick}>
             Join Live Zoom Session
           </button>
@@ -363,6 +372,7 @@ export default function ChatWidget({ lead }) {
               }
               onClick={() => {
                 clearRescueTimer();
+                setZoomCTAVisible(false);
                 setActiveMenu("Education Loan Info");
 
                 setMessages((prev) => [
@@ -408,9 +418,11 @@ export default function ChatWidget({ lead }) {
               setActiveMenu(null);
               setRescueActive(true);
 
-              // ✅ Show Zoom button ONLY if coming from Success Stories
-              if (submenuSource === "stories" && !zoomClicked) {
-                setShowZoomButton(true);
+              // ✅ Zoom CTA ONLY if returning from Success Stories
+              if (zoomUnlocked && !zoomClicked) {
+                setZoomCTAVisible(true);
+              } else {
+                setZoomCTAVisible(false);
               }
 
               setSubmenuSource(null);
