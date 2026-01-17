@@ -1,4 +1,4 @@
-// import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
+import { FaWhatsapp, FaPhoneAlt } from "react-icons/fa";
 import { WHATSAPP_NUMBER, CALL_NUMBER } from "../config/constants";
 
 export default function ChatHeader() {
