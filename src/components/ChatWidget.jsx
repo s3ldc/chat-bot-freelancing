@@ -17,10 +17,9 @@ export default function ChatWidget({ lead }) {
   const [activeMenu, setActiveMenu] = useState(null);
   const [rescueActive, setRescueActive] = useState(false);
   const [userInput, setUserInput] = useState("");
-  const [submenuSource, setSubmenuSource] = useState(null);
+  // const [submenuSource, setSubmenuSource] = useState(null);
   const [zoomCTAVisible, setZoomCTAVisible] = useState(false);
   const [zoomUnlocked, setZoomUnlocked] = useState(false);
-
 
   // Initial Zoom pitch flow
   useEffect(() => {
@@ -138,7 +137,7 @@ export default function ChatWidget({ lead }) {
     clearRescueTimer();
 
     setActiveMenu("Success Stories");
-    setSubmenuSource("stories");
+    // setSubmenuSource("stories");
 
     // Hide Zoom while inside submenu
     setZoomCTAVisible(false);
@@ -164,27 +163,42 @@ export default function ChatWidget({ lead }) {
     setSubMenuActive(true);
   };
 
-  const handleLink = (label, link) => {
-    clearRescueTimer();
-    setZoomCTAVisible(false);
+const handleLink = (label, links) => {
+  clearRescueTimer();
+  setZoomCTAVisible(false);
+  setActiveMenu(label);
 
-    setActiveMenu(label);
+  const safeLinks = Array.isArray(links) ? links : [links];
 
-    setMessages((prev) => [
-      ...prev,
-      { sender: "bot", text: `${label}`, type: "submenu", subtype: "title" },
-      { sender: "bot", text: link, type: "submenu", subtype: "link" },
-      {
-        sender: "bot",
-        text: "Anything else you'd like to explore?",
-        type: "submenu",
-        subtype: "text",
-      },
-    ]);
+  setMessages((prev) => [
+    ...prev,
+    {
+      sender: "bot",
+      text: label,
+      type: "submenu",
+      subtype: "title",
+    },
 
-    setMenuState("hidden");
-    setSubMenuActive(true);
-  };
+    ...safeLinks.map((link) => ({
+      sender: "bot",
+      text: link,
+      type: "submenu",
+      subtype: "link",
+    })),
+
+    {
+      sender: "bot",
+      text: "Anything else you'd like to explore?",
+      type: "submenu",
+      subtype: "text",
+    },
+  ]);
+
+  setMenuState("hidden");
+  setSubMenuActive(true);
+  console.log("Links received:", links);
+
+};
 
   const openRescueMenu = () => {
     setMenuState("main");
@@ -324,7 +338,9 @@ export default function ChatWidget({ lead }) {
                   ? "menu-item active"
                   : "menu-item"
               }
-              onClick={() => handleLink("A1 / A2 German Guide", RESOURCES.A1A2)}
+              onClick={() =>
+                handleLink("A1 / A2 German Guide", RESOURCES.GERMAN_A1)
+              }
             >
               A1 / A2 German Guide
             </button>
@@ -336,7 +352,11 @@ export default function ChatWidget({ lead }) {
                   : "menu-item"
               }
               onClick={() =>
-                handleLink("Bachelors / Masters Guide", RESOURCES.DEGREE)
+                handleLink(
+                  "Bachelors / Masters Guide",[
+                  RESOURCES.BACHELORS,
+                  RESOURCES.MASTERS,
+                ])
               }
             >
               Bachelors / Masters Guide
@@ -425,7 +445,7 @@ export default function ChatWidget({ lead }) {
                 setZoomCTAVisible(false);
               }
 
-              setSubmenuSource(null);
+              // setSubmenuSource(null);
             }}
           >
             Back to Menu
