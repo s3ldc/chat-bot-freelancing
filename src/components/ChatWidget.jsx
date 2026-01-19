@@ -490,6 +490,43 @@ export default function ChatWidget({ lead }) {
     ]);
   };
 
+  const handleGermanFree = () => {
+    clearRescueTimer();
+
+    setActiveMenu("Learn German A1 and A2 Free");
+    setMenuState("hidden");
+    setSubMenuActive(true);
+
+    setMessages((prev) => [
+      ...prev,
+
+      // 1️⃣ Message 1 — Title
+      {
+        sender: "bot",
+        text: "LEARN GERMAN A1 AND A2 FOR FREE",
+        type: "submenu",
+      },
+
+      // 2️⃣ Message 2 — A1
+      {
+        sender: "bot",
+        text:
+          "LEARN GERMAN A1 FOR FREE\n" +
+          "https://indogermaneducation.com/a1-german/",
+        type: "submenu",
+      },
+
+      // 3️⃣ Message 3 — A2
+      {
+        sender: "bot",
+        text:
+          "LEARN GERMAN A2 FOR FREE\n" +
+          "https://indogermaneducation.com/a2-german/",
+        type: "submenu",
+      },
+    ]);
+  };
+
   return (
     <div className="chat-widget">
       <ChatHeader />
@@ -563,18 +600,6 @@ export default function ChatWidget({ lead }) {
             >
               Masters in Germany
             </button>
-            {/* <button
-              className={
-                activeMenu === "A1 / A2 German Guide"
-                  ? "menu-item active"
-                  : "menu-item"
-              }
-              onClick={() =>
-                handleLink("A1 / A2 German Guide", RESOURCES.GERMAN_A1)
-              }
-            >
-              A1 / A2 German Guide
-            </button> */}
 
             {/* 2️⃣ Bachelors SECOND */}
             <button
@@ -597,6 +622,17 @@ export default function ChatWidget({ lead }) {
               onClick={handleCollege}
             >
               Studying College in Germany
+            </button>
+
+            <button
+              className={
+                activeMenu === "Learn German A1 and A2 Free"
+                  ? "menu-item active"
+                  : "menu-item"
+              }
+              onClick={handleGermanFree}
+            >
+              Learn German A1 and A2 Free
             </button>
 
             <button
