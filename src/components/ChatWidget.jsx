@@ -63,14 +63,18 @@ export default function ChatWidget({ lead }) {
 
     rescueTimerRef.current = setTimeout(() => {
       setMessages((prev) => [
-        ...prev,
+        // ❌ REMOVE ALL ZOOM CTA MESSAGES
+        ...prev.filter((msg) => msg.type !== "zoomCTA"),
         {
           sender: "bot",
           text: "Still here? No worries! If you can’t join the Zoom right now, I can share some of our exclusive guides to get you started. Which one do you need?",
         },
       ]);
+
+      // ✅ OPEN MENU
       setMenuState("main");
       setZoomCTAVisible(false);
+      setZoomUnlocked(false); // 🔒 lock zoom permanently after rescue
       setRescueActive(true);
     }, 8000);
   };
