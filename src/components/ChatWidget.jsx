@@ -735,7 +735,7 @@ export default function ChatWidget({ lead }) {
         <input
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
-          placeholder='Type here… (e.g. "HI", "APS")'
+          placeholder='Type here… (e.g. "HI", "MASTERS")'
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               handleUserInput();
