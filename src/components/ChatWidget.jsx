@@ -382,6 +382,60 @@ export default function ChatWidget({ lead }) {
     ]);
   };
 
+  const handleBachelors = () => {
+    clearRescueTimer();
+
+    setActiveMenu("Bachelors in Germany");
+    setMenuState("hidden");
+    setSubMenuActive(true);
+
+    setMessages((prev) => [
+      ...prev,
+
+      // 1️⃣ Message 1 — Zoom counselling intro
+      {
+        sender: "bot",
+        text:
+          "LIVE 1-to-1 Zoom Counselling (Mon–Sat):\n" +
+          "10:30 AM se 06:00 PM tak main Zoom par live rehta hoon – yahi pe admission, APS, visa,\n" +
+          "documents, steps, timeline, budget sab clear karunga.",
+        type: "submenu",
+      },
+
+      // 2️⃣ Message 2 — INLINE ZOOM CTA (button only, no link text)
+      {
+        sender: "bot",
+        type: "zoomCTA",
+      },
+
+      // 3️⃣ Message 3 — Bachelors links block
+      {
+        sender: "bot",
+        text:
+          "COMPLETE PLAN FOR BACHELORS IN GERMANY:\n" +
+          "https://indogermaneducation.com/bachelors/\n\n" +
+          "BACHELORS IN GERMANY COMPLETE STEPS PROCESS TIMELINE BUDGET COUNSELLING VIDEO:\n" +
+          "https://www.youtube.com/watch?v=qwyB0B9JH0Q\n\n" +
+          "PRIVESH IN GERMANY:\n" +
+          "https://indogermaneducation.com/privesh-in-germany/\n\n" +
+          "WHY GERMANY IN 2026?\n" +
+          "https://www.youtube.com/watch?v=vI_B_NjWB-c",
+        type: "submenu",
+      },
+
+      // 4️⃣ Message 4 — WhatsApp Community
+      {
+        sender: "bot",
+        text:
+          "Direct call / WhatsApp for personal guidance:\n" +
+          "+91 97124 25555 / +91 72111 25555\n\n" +
+          "Very Important STUDY IN GERMANY 2026 WHATSAPP COMMUNITY:\n" +
+          "https://chat.whatsapp.com/Iq0jzDZmaT30SmOEin4CPV",
+        type: "submenu",
+      },
+    ]);
+  };
+
   return (
     <div className="chat-widget">
       <ChatHeader />
@@ -455,7 +509,7 @@ export default function ChatWidget({ lead }) {
             >
               Masters in Germany
             </button>
-            <button
+            {/* <button
               className={
                 activeMenu === "A1 / A2 German Guide"
                   ? "menu-item active"
@@ -466,9 +520,9 @@ export default function ChatWidget({ lead }) {
               }
             >
               A1 / A2 German Guide
-            </button>
+            </button> */}
 
-            <button
+            {/* <button
               className={
                 activeMenu === "Masters in Germany"
                   ? "menu-item active"
@@ -477,17 +531,18 @@ export default function ChatWidget({ lead }) {
               onClick={handleMasters}
             >
               Masters in Germany
-            </button>
+            </button> */}
 
+            {/* 2️⃣ Bachelors SECOND */}
             <button
               className={
-                activeMenu === "APS Process Guide"
+                activeMenu === "Bachelors in Germany"
                   ? "menu-item active"
                   : "menu-item"
               }
-              onClick={handleAPS}
+              onClick={handleBachelors}
             >
-              APS Process Guide
+              Bachelors in Germany
             </button>
 
             <button
@@ -546,6 +601,7 @@ export default function ChatWidget({ lead }) {
           <button
             className="submenu-close"
             onClick={() => {
+              // Remove submenu + zoomCTA messages
               setMessages((prev) =>
                 prev.filter(
                   (msg) => msg.type !== "submenu" && msg.type !== "zoomCTA",
@@ -557,14 +613,9 @@ export default function ChatWidget({ lead }) {
               setActiveMenu(null);
               setRescueActive(true);
 
-              // ✅ Zoom CTA ONLY if returning from Success Stories
-              if (zoomUnlocked && !zoomClicked) {
-                setZoomCTAVisible(true);
-              } else {
-                setZoomCTAVisible(false);
-              }
-
-              // setSubmenuSource(null);
+              // ❌ ALWAYS hide Zoom CTA when returning to menu
+              setZoomCTAVisible(false);
+              setZoomUnlocked(false);
             }}
           >
             Back to Menu
