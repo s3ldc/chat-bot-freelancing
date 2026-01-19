@@ -150,14 +150,13 @@ export default function ChatWidget({ lead }) {
     clearRescueTimer();
 
     setActiveMenu("Success Stories");
-    // setSubmenuSource("stories");
-
-    // Hide Zoom while inside submenu
-    setZoomCTAVisible(false);
-    setZoomUnlocked(true);
+    setMenuState("hidden");
+    setSubMenuActive(true);
 
     setMessages((prev) => [
       ...prev,
+
+      // 1️⃣ First text
       {
         sender: "bot",
         text:
@@ -165,15 +164,20 @@ export default function ChatWidget({ lead }) {
           "Through live Zoom counselling, we explain real admission journeys, visa approvals, and student success stories.",
         type: "submenu",
       },
+
+      // 2️⃣ Second text
       {
         sender: "bot",
         text: "If you want personalised guidance and real examples, you can join our live Zoom counselling.",
         type: "submenu",
       },
-    ]);
 
-    setMenuState("hidden");
-    setSubMenuActive(true);
+      // 3️⃣ THIRD — INLINE ZOOM CTA (only here)
+      {
+        sender: "bot",
+        type: "zoomCTA",
+      },
+    ]);
   };
 
   const handleLink = (label, links) => {
@@ -646,7 +650,7 @@ export default function ChatWidget({ lead }) {
               Success Stories
             </button>
 
-            <button
+            {/* <button
               className={
                 activeMenu === "Education Loan Info"
                   ? "menu-item active"
@@ -673,7 +677,7 @@ export default function ChatWidget({ lead }) {
               }}
             >
               Education Loan Info
-            </button>
+            </button> */}
 
             {/* <button
               className="menu-secondary"
