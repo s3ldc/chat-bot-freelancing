@@ -319,18 +319,13 @@ export default function ChatWidget({ lead }) {
     clearRescueTimer();
 
     setActiveMenu("Masters in Germany");
-
-    // Open submenu
     setMenuState("hidden");
     setSubMenuActive(true);
-
-    // Show Zoom button immediately after first message
-    setZoomCTAVisible(true);
 
     setMessages((prev) => [
       ...prev,
 
-      // 1️⃣ First message — Zoom counselling intro
+      // 1️⃣ First message — Intro
       {
         sender: "bot",
         text:
@@ -340,7 +335,13 @@ export default function ChatWidget({ lead }) {
         type: "submenu",
       },
 
-      // 3️⃣ Third message — Masters links block
+      // 2️⃣ SECOND — Zoom CTA INLINE
+      {
+        sender: "bot",
+        type: "zoomCTA",
+      },
+
+      // 3️⃣ Third message — Links block
       {
         sender: "bot",
         text:
@@ -355,7 +356,7 @@ export default function ChatWidget({ lead }) {
         type: "submenu",
       },
 
-      // 4️⃣ Fourth message — Call / WhatsApp + Community
+      // 4️⃣ Fourth message — Contact + Community
       {
         sender: "bot",
         text:
@@ -395,6 +396,19 @@ export default function ChatWidget({ lead }) {
               </button>
             );
           }
+          // Inline Zoom CTA message
+          if (m.type === "zoomCTA" && !zoomClicked) {
+            return (
+              <button
+                key={i}
+                className="zoom-button"
+                onClick={handleZoomClick}
+                style={{ margin: "8px auto", display: "block" }}
+              >
+                Join Live Zoom Session
+              </button>
+            );
+          }
 
           // Normal message
           return (
@@ -410,11 +424,11 @@ export default function ChatWidget({ lead }) {
           );
         })}
 
-        {zoomCTAVisible && !zoomClicked && (
+        {/* {zoomCTAVisible && !zoomClicked && (
           <button className="zoom-button" onClick={handleZoomClick}>
             Join Live Zoom Session
           </button>
-        )}
+        )} */}
 
         {menuState === "main" && !subMenuActive && (
           <div className="menu">
