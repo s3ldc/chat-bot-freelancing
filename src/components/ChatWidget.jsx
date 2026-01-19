@@ -537,7 +537,7 @@ export default function ChatWidget({ lead }) {
             className="submenu-close"
             onClick={() => {
               setMessages((prev) =>
-                prev.filter((msg) => msg.type !== "submenu"),
+                prev.filter((msg) => msg.type !== "submenu" && msg.type !== "zoomCTA"),
               );
 
               setSubMenuActive(false);
