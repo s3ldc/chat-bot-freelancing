@@ -251,23 +251,26 @@ export default function ChatWidget({ lead }) {
       return;
     }
 
-    // ---- APS ----
-    if (text.includes("aps")) {
-      handleAPS();
+    // ---- BACHELORS ----
+    if (text.includes("bachelor")) {
+      handleBachelors();
       return;
     }
 
-    // ---- GERMAN / A1 / A2 ----
-    if (text.includes("a1") || text.includes("a2") || text.includes("german")) {
-      handleLink("A1 / A2 German Guide", RESOURCES.GERMAN_A1);
+    // ---- GERMAN / A1 / A2 FREE ----
+    if (text.includes("german") || text.includes("a1") || text.includes("a2")) {
+      handleGermanFree();
+      return;
+    }
 
+    if (text.includes("story") || text.includes("success")) {
+      handleStories();
       return;
     }
 
     // ---- MASTERS ----
     if (text.includes("master")) {
-      handleLink("Masters in Germany", RESOURCES.MASTERS);
-
+      handleMasters();
       return;
     }
 
