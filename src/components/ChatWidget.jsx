@@ -163,41 +163,40 @@ export default function ChatWidget({ lead }) {
     setSubMenuActive(true);
   };
 
-const handleLink = (label, links) => {
-  clearRescueTimer();
-  setZoomCTAVisible(false);
-  setActiveMenu(label);
+  const handleLink = (label, links) => {
+    clearRescueTimer();
+    setZoomCTAVisible(false);
+    setActiveMenu(label);
 
-  const safeLinks = Array.isArray(links) ? links : [links];
+    const safeLinks = Array.isArray(links) ? links : [links];
 
-  setMessages((prev) => [
-    ...prev,
-    {
-      sender: "bot",
-      text: label,
-      type: "submenu",
-      subtype: "title",
-    },
+    setMessages((prev) => [
+      ...prev,
+      {
+        sender: "bot",
+        text: label,
+        type: "submenu",
+        subtype: "title",
+      },
 
-    ...safeLinks.map((link) => ({
-      sender: "bot",
-      text: link,
-      type: "submenu",
-      subtype: "link",
-    })),
+      ...safeLinks.map((link) => ({
+        sender: "bot",
+        text: link,
+        type: "submenu",
+        subtype: "link",
+      })),
 
-    {
-      sender: "bot",
-      text: "Anything else you'd like to explore?",
-      type: "submenu",
-      subtype: "text",
-    },
-  ]);
+      {
+        sender: "bot",
+        text: "Anything else you'd like to explore?",
+        type: "submenu",
+        subtype: "text",
+      },
+    ]);
 
-  setMenuState("hidden");
-  setSubMenuActive(true);
-
-};
+    setMenuState("hidden");
+    setSubMenuActive(true);
+  };
 
   const openRescueMenu = () => {
     setMenuState("main");
@@ -281,6 +280,59 @@ const handleLink = (label, links) => {
     ]);
   };
 
+  const handleMasters = () => {
+    clearRescueTimer();
+
+    setActiveMenu("Masters in Germany");
+
+    // Open submenu
+    setMenuState("hidden");
+    setSubMenuActive(true);
+
+    // Show Zoom button immediately after first message
+    setZoomCTAVisible(true);
+
+    setMessages((prev) => [
+      ...prev,
+
+      // 1️⃣ First message — Zoom counselling intro
+      {
+        sender: "bot",
+        text:
+          "LIVE 1-to-1 Zoom Counselling (Mon–Sat):\n" +
+          "10:30 AM se 06:00 PM tak main Zoom par live rehta hoon – yahi pe admission, APS, visa,\n" +
+          "documents, steps, timeline, budget sab clear karunga.",
+        type: "submenu",
+      },
+
+      // 3️⃣ Third message — Masters links block
+      {
+        sender: "bot",
+        text:
+          "COMPLETE PLAN:\n" +
+          "https://indogermaneducation.com/masters/\n\n" +
+          "MASTERS IN GERMANY COMPLETE GUIDE VIDEO:\n" +
+          "https://www.youtube.com/watch?v=NQwpq_xI-b0&t=2s\n\n" +
+          "PRIVESH IN GERMANY:\n" +
+          "https://indogermaneducation.com/privesh-in-germany/\n\n" +
+          "WHY GERMANY IN 2026?\n" +
+          "https://www.youtube.com/watch?v=vI_B_NjWB-c",
+        type: "submenu",
+      },
+
+      // 4️⃣ Fourth message — Call / WhatsApp + Community
+      {
+        sender: "bot",
+        text:
+          "Direct call / WhatsApp for personal guidance:\n" +
+          "+91 97124 25555 / +91 72111 25555\n\n" +
+          "Very Important STUDY IN GERMANY 2026 WHATSAPP COMMUNITY:\n" +
+          "https://chat.whatsapp.com/Iq0jzDZmaT30SmOEin4CPV",
+        type: "submenu",
+      },
+    ]);
+  };
+
   return (
     <div className="chat-widget">
       <ChatHeader />
@@ -346,19 +398,13 @@ const handleLink = (label, links) => {
 
             <button
               className={
-                activeMenu === "Bachelors / Masters Guide"
+                activeMenu === "Masters in Germany"
                   ? "menu-item active"
                   : "menu-item"
               }
-              onClick={() =>
-                handleLink(
-                  "Bachelors / Masters Guide",[
-                  RESOURCES.BACHELORS,
-                  RESOURCES.MASTERS,
-                ])
-              }
+              onClick={handleMasters}
             >
-              Bachelors / Masters Guide
+              Masters in Germany
             </button>
 
             <button

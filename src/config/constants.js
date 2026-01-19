@@ -6,10 +6,8 @@ export const CALL_NUMBER = "9712425555";
 
 export const RESOURCES = {
   MASTERS: "https://indogermaneducation.com/masters/",
-  BACHELORS: "https://indogermaneducation.com/bachelors/",
-  STUDIENKOLLEG: "https://indogermaneducation.com/privesh-in-germany/",
-  GERMAN_A1: "https://indogermaneducation.com/a1-german/",
+  MASTERS_VIDEO: "https://www.youtube.com/watch?v=NQwpq_xI-b0&t=2s",
+  PRIVESH: "https://indogermaneducation.com/privesh-in-germany/",
   WHY_GERMANY: "https://www.youtube.com/watch?v=vI_B_NjWB-c",
-  WHATSAPP_GROUP:
-    "https://chat.whatsapp.com/Iq0jzDZmaT30SmOEin4CPV",
 };
+
