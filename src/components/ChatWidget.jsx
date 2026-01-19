@@ -45,7 +45,7 @@ export default function ChatWidget({ lead }) {
           ...prev,
           {
             sender: "bot",
-            type: "zoomCTA",
+            type: "zoomCTA-initial",
           },
         ]);
 
@@ -64,7 +64,9 @@ export default function ChatWidget({ lead }) {
     rescueTimerRef.current = setTimeout(() => {
       setMessages((prev) => [
         // ❌ REMOVE ALL ZOOM CTA MESSAGES
-        ...prev.filter((msg) => msg.type !== "zoomCTA"),
+        ...prev.filter(
+          (msg) => msg.type !== "zoomCTA" && msg.type !== "zoomCTA-initial",
+        ),
         {
           sender: "bot",
           text: "Still here? No worries! If you can’t join the Zoom right now, I can share some of our exclusive guides to get you started. Which one do you need?",
@@ -85,32 +87,33 @@ export default function ChatWidget({ lead }) {
     localStorage.setItem("zoomClicked", "true");
     setZoomClicked(true);
 
-    // ❌ REMOVE ALL EXISTING ZOOM CTA MESSAGES FROM CHAT
-    setMessages((prev) => prev.filter((msg) => msg.type !== "zoomCTA"));
-
-    // Open Zoom
-    window.open(ZOOM_LINK, "_blank");
-
     // Stop rescue timer
     clearTimeout(rescueTimerRef.current);
 
-    // Add confirmation messages
-    setMessages((prev) => [
-      ...prev,
-      {
-        sender: "bot",
-        text:
-          `Awesome! You're being redirected 🚀\n` +
-          `Once you enter, stay on the call—you can ask the host any specific questions about ${lead.university}.`,
-      },
-      {
-        sender: "bot",
-        text: `You can also type "Know more" if you'd like additional details.`,
-        type: "action",
-        action: "knowMore",
-        label: "Know more",
-      },
-    ]);
+    // Remove ONLY the INITIAL zoom CTA
+    setMessages((prev) => {
+      const cleaned = prev.filter((msg) => msg.type !== "zoomCTA-initial");
+
+      return [
+        ...cleaned,
+        {
+          sender: "bot",
+          text:
+            `Awesome! You're being redirected 🚀\n` +
+            `Once you enter, stay on the call—you can ask the host any specific questions about ${lead.university}.`,
+        },
+        {
+          sender: "bot",
+          text: `You can also type "Know more" if you'd like additional details.`,
+          type: "action",
+          action: "knowMore",
+          label: "Know more",
+        },
+      ];
+    });
+
+    // Open Zoom
+    window.open(ZOOM_LINK, "_blank");
   };
 
   const clearRescueTimer = () => {
@@ -567,8 +570,23 @@ export default function ChatWidget({ lead }) {
               </button>
             );
           }
-          // Inline Zoom CTA message
-          if (m.type === "zoomCTA" && !zoomClicked) {
+      
+          // Initial Zoom CTA (only before click, only once)
+          if (m.type === "zoomCTA-initial" && !zoomClicked) {
+            return (
+              <button
+                key={i}
+                className="zoom-button"
+                onClick={handleZoomClick}
+                style={{ margin: "8px auto", display: "block" }}
+              >
+                Join Live Zoom Session
+              </button>
+            );
+          }
+
+          // Inline Zoom CTA (Masters / Bachelors / Stories)
+          if (m.type === "zoomCTA") {
             return (
               <button
                 key={i}
@@ -707,7 +725,10 @@ export default function ChatWidget({ lead }) {
               // Remove submenu + zoomCTA messages
               setMessages((prev) =>
                 prev.filter(
-                  (msg) => msg.type !== "submenu" && msg.type !== "zoomCTA",
+                  (msg) =>
+                    msg.type !== "submenu" &&
+                    msg.type !== "zoomCTA" &&
+                    msg.type !== "zoomCTA-initial",
                 ),
               );
 
