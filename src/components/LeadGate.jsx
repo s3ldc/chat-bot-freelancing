@@ -4,7 +4,9 @@ export default function LeadGate({ onSubmit }) {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    university: "",
+    whatsapp: "",
+    email: "",
+    city: "",
   });
 
   const handleChange = (e) => {
@@ -12,7 +14,13 @@ export default function LeadGate({ onSubmit }) {
   };
 
   const handleSubmit = () => {
-    if (!form.name || !form.phone || !form.university) {
+    if (
+      !form.name ||
+      !form.phone ||
+      !form.whatsapp ||
+      !form.email ||
+      !form.city
+    ) {
       alert("Please fill all fields");
       return;
     }
@@ -38,16 +46,32 @@ export default function LeadGate({ onSubmit }) {
         <input
           type="tel"
           name="phone"
-          placeholder="Phone Number"
+          placeholder="Contact Number"
           value={form.phone}
           onChange={handleChange}
         />
 
         <input
+          type="tel"
+          name="whatsapp"
+          placeholder="WhatsApp Number"
+          value={form.whatsapp}
+          onChange={handleChange}
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email ID"
+          value={form.email}
+          onChange={handleChange}
+        />
+
+        <input
           type="text"
-          name="university"
-          placeholder="Desired University"
-          value={form.university}
+          name="city"
+          placeholder="City"
+          value={form.city}
           onChange={handleChange}
         />
 
