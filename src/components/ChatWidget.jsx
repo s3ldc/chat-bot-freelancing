@@ -39,7 +39,16 @@ export default function ChatWidget({ lead }) {
       i++;
       if (i === flow.length) {
         clearInterval(interval);
-        setZoomCTAVisible(true);
+
+        // Insert Zoom CTA as next bot message
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: "bot",
+            type: "zoomCTA",
+          },
+        ]);
+
         startRescueTimer();
       }
     }, 700);
