@@ -81,12 +81,20 @@ export default function ChatWidget({ lead }) {
 
   // Zoom click
   const handleZoomClick = () => {
+    // Mark zoom as clicked permanently
     localStorage.setItem("zoomClicked", "true");
-    setZoomCTAVisible(false);
+    setZoomClicked(true);
+
+    // ❌ REMOVE ALL EXISTING ZOOM CTA MESSAGES FROM CHAT
+    setMessages((prev) => prev.filter((msg) => msg.type !== "zoomCTA"));
+
+    // Open Zoom
     window.open(ZOOM_LINK, "_blank");
 
+    // Stop rescue timer
     clearTimeout(rescueTimerRef.current);
 
+    // Add confirmation messages
     setMessages((prev) => [
       ...prev,
       {
@@ -103,8 +111,6 @@ export default function ChatWidget({ lead }) {
         label: "Know more",
       },
     ]);
-
-    setZoomCTAVisible(false);
   };
 
   const clearRescueTimer = () => {
