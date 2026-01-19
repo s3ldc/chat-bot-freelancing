@@ -283,21 +283,35 @@ export default function ChatWidget({ lead }) {
   const renderWithLinks = (text) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
 
-    return text.split(urlRegex).map((part, index) => {
-      if (part.match(urlRegex)) {
-        return (
-          <a
-            key={index}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: "#0052cc", textDecoration: "underline" }}
-          >
-            {part}
-          </a>
-        );
-      }
-      return part;
+    return text.split("\n").map((line, lineIndex) => {
+      const parts = line.split(urlRegex);
+
+      return (
+        <div key={lineIndex}>
+          {parts.map((part, index) => {
+            if (part.match(urlRegex)) {
+              return (
+                <a
+                  key={index}
+                  href={part}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    color: "#0052cc",
+                    textDecoration: "underline",
+                    display: "block",
+                    wordBreak: "break-all",
+                    marginTop: "4px",
+                  }}
+                >
+                  {part}
+                </a>
+              );
+            }
+            return <span key={index}>{part}</span>;
+          })}
+        </div>
+      );
     });
   };
 
