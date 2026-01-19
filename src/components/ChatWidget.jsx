@@ -447,6 +447,16 @@ export default function ChatWidget({ lead }) {
           <div className="menu">
             <button
               className={
+                activeMenu === "Masters in Germany"
+                  ? "menu-item active"
+                  : "menu-item"
+              }
+              onClick={handleMasters}
+            >
+              Masters in Germany
+            </button>
+            <button
+              className={
                 activeMenu === "A1 / A2 German Guide"
                   ? "menu-item active"
                   : "menu-item"
@@ -537,7 +547,9 @@ export default function ChatWidget({ lead }) {
             className="submenu-close"
             onClick={() => {
               setMessages((prev) =>
-                prev.filter((msg) => msg.type !== "submenu" && msg.type !== "zoomCTA"),
+                prev.filter(
+                  (msg) => msg.type !== "submenu" && msg.type !== "zoomCTA",
+                ),
               );
 
               setSubMenuActive(false);
